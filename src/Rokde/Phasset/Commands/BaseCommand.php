@@ -11,6 +11,20 @@ namespace Rokde\Phasset\Commands;
 use Illuminate\Console\Command;
 
 abstract class BaseCommand extends Command {
+
+	/**
+	 * overwriting command name when necessary
+	 *
+	 * @param string|null $name
+	 */
+	public function __construct($name = null)
+	{
+		if ($name !== null)
+			$this->name = $name;
+
+		parent::__construct();
+	}
+
 	/**
 	 * Write a string as information output when verbosity level given.
 	 *
