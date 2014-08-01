@@ -10,9 +10,9 @@
     "require": {
         "php": ">=5.4.0",
         "illuminate/support": "4.*",
-		"leafo/lessphp": "0.4.0",
-		"leafo/scssphp": "0.0.12",
-		"mrclay/minify": "2.2.0"
+        "leafo/lessphp": "0.4.0",
+        "leafo/scssphp": "0.0.12",
+        "mrclay/minify": "2.2.0"
     },
     "autoload": {
         "classmap": [
@@ -22,6 +22,5 @@
             "Rokde\\Phasset\\": "src/"
         }
     },
-	"bin": ["bin/phasset"],
     "minimum-stability": "stable"
 }
