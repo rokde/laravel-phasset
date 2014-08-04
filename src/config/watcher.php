@@ -57,5 +57,7 @@ return [
 	'filters' => [
 		'minify-css' => 'Rokde\Phasset\Filters\Css\MinifyFilter',
 		'minify-js' => 'Rokde\Phasset\Filters\Js\MinifyFilter',
+		'less' => 'Rokde\Phasset\Filters\Less\LessCompiler',
+		'sass' => 'Rokde\Phasset\Filters\Sass\ScssCompiler',
 	],
 ];
