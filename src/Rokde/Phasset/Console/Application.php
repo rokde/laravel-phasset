@@ -23,7 +23,7 @@ class Application extends ConsoleApplication
 | '_ \| '_ \ / _` / __/ __|/ _ \ __|
 | |_) | | | | (_| \__ \__ \  __/ |_
 | .__/|_| |_|\__,_|___/___/\___|\__|
-|_|                                 ";
+|_|   ";
 
 	/**
 	 * start the application

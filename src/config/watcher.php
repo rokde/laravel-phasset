@@ -13,10 +13,6 @@ return [
 			'*.css',
 			'*.js',
 		],
-
-		'vendor/twbs/bootstrap/dist' => [
-			'*.min.css',
-		],
 	],
 
 	/**
@@ -27,16 +23,10 @@ return [
 		 * concrete asset
 		 * - with the necessary processing filters
 		 */
-		'app/assets/stylesheets/forms.css' => [
+		'app/assets/stylesheets/application.css' => [
 			'minify-css'
 		],
-		'app/assets/test.css' => [
-			'minify-css'
-		],
-		'app/assets/test.js' => [
-			'minify-js'
-		],
-		'vendor/twbs/bootstrap/dist/js/bootstrap.min.js' => [
+		'app/assets/javascripts/application.js' => [
 			'minify-js'
 		],
 	],
@@ -48,14 +38,11 @@ return [
 		/**
 		 * concrete target asset: will be written and updated on source changes
 		 */
-		'public/assets/dir/dir/appWatcher.css' => [
-			'vendor/twbs/bootstrap/dist/css/bootstrap.min.css',
-			'app/assets/stylesheets/forms.css',
-			'app/assets/test.css',
+		'public/assets/application.css' => [
+			'app/assets/stylesheets/application.css',
 		],
-		'public/assets/dir/dir/appWatcher.js' => [
-			'vendor/twbs/bootstrap/dist/js/bootstrap.min.js',
-			'app/assets/test.js'
+		'public/assets/application.js' => [
+			'app/assets/javascripts/application.js'
 		],
 	],
 

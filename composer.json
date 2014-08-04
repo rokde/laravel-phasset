@@ -1,6 +1,6 @@
 {
 	"name": "rokde/phasset",
-	"description": "A php asset manager",
+	"description": "A php asset manager for laravel",
 	"keywords": ["php", "asset", "manager", "watcher", "less", "css", "sass", "scss", "compile", "laravel"],
 	"license": "MIT",
 	"authors": [
@@ -13,7 +13,7 @@
 		"php": ">=5.4.0",
 		"illuminate/support": "4.*",
 		"leafo/lessphp": "0.4.0",
-		"leafo/scssphp": "0.0.12",
+		"leafo/scssphp": "0.0.*",
 		"mrclay/minify": "2.2.0"
 	},
 	"autoload": {
