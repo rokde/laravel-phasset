@@ -29,6 +29,7 @@ class ScssCompiler implements Filterable {
 	{
 		$this->scssc = new scssc();
 		$this->scssc->setFormatter('scss_formatter_compressed');
+		$this->scssc->addImportPath(getcwd());
 	}
 
 	/**
@@ -50,6 +51,8 @@ class ScssCompiler implements Filterable {
 	 */
 	public function isFilterable($file)
 	{
+		$this->scssc->addImportPath(dirname($file));
+
 		return ends_with($file, '.scss');
 	}
 }

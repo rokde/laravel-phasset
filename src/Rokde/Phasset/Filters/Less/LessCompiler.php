@@ -29,6 +29,7 @@ class LessCompiler implements Filterable
 	{
 		$this->lessc = new lessc();
 		$this->lessc->setFormatter('compressed');
+		$this->lessc->addImportDir(getcwd());
 	}
 
 	/**
@@ -50,6 +51,8 @@ class LessCompiler implements Filterable
 	 */
 	public function isFilterable($file)
 	{
+		$this->lessc->addImportDir(dirname($file));
+
 		return ends_with($file, '.less');
 	}
 }
