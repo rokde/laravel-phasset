@@ -19,6 +19,20 @@ class TargetFile extends File implements Writable {
 	private $sourceFiles = [];
 
 	/**
+	 * do compression
+	 *
+	 * @var bool
+	 */
+	private $compression = true;
+
+	/**
+	 * compression level
+	 *
+	 * @var int
+	 */
+	private $compressionLevel = 9;
+
+	/**
 	 * adds a source file
 	 * @param SourceFile $sourceFile
 	 * @return self
@@ -45,6 +59,14 @@ class TargetFile extends File implements Writable {
 			mkdir(dirname($this->getFilename()), 0777, true);
 
 		file_put_contents($this->getFilename(), $content);
+
+		if ($this->compression)
+		{
+			file_put_contents($this->getFilename() . '.gz',
+				gzencode(implode('', $content),
+				$this->compressionLevel)
+			);
+		}
 	}
 
 	/**
@@ -62,5 +84,28 @@ class TargetFile extends File implements Writable {
 		}
 
 		return false;
+	}
+
+	/**
+	 * sets and gets compression
+	 *
+	 * @param bool|null $flag
+	 * @param int|null $level
+	 * @return bool
+	 */
+	public function compression($flag = null, $level = null)
+	{
+		if ($flag !== null)
+		{
+			$this->compression = $flag === true;
+			if ($level !== null)
+			{
+				$this->compressionLevel = ($level >= 0 && $level <= 9)
+					? $level
+					: $this->compressionLevel;
+			}
+		}
+
+		return $this->compression;
 	}
 }
