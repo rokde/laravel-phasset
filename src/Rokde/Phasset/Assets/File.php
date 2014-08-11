@@ -40,7 +40,7 @@ abstract class File {
 	 * @param string $filename
 	 * @param \Illuminate\Events\Dispatcher $events
 	 */
-	public function __construct($filename, Dispatcher $events)
+	public function __construct($filename, Dispatcher $events = null)
 	{
 		$this->filename = $filename;
 
