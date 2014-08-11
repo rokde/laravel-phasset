@@ -9,6 +9,7 @@
 namespace Rokde\Phasset\Repositories;
 
 
+use Illuminate\Events\Dispatcher;
 use Rokde\Phasset\Assets\TargetFile;
 
 class TargetFilesRepository {
@@ -35,13 +36,23 @@ class TargetFilesRepository {
 	private $targets = [];
 
 	/**
+	 * events dispatcher
+	 *
+	 * @var \Illuminate\Events\Dispatcher
+	 */
+	private $events;
+
+	/**
 	 * @param SourceFilesRepository $sourceFilesRepository
 	 * @param string $basePath
+	 * @param \Illuminate\Events\Dispatcher $events
 	 */
-	public function __construct(SourceFilesRepository $sourceFilesRepository, $basePath)
+	public function __construct(SourceFilesRepository $sourceFilesRepository, $basePath, Dispatcher $events)
 	{
 		$this->sourceFilesRepository = $sourceFilesRepository;
 		$this->basePath = $basePath;
+
+		$this->events = $events;
 	}
 
 	/**
@@ -71,7 +82,7 @@ class TargetFilesRepository {
 	{
 		if (! $target instanceof TargetFile)
 		{
-			$target = new TargetFile($target);
+			$target = new TargetFile($target, $this->events);
 		}
 		$target->setBasePath($this->basePath);
 		foreach ($sourceFiles as $sourceFile)
@@ -106,9 +117,28 @@ class TargetFilesRepository {
 	 */
 	public function update()
 	{
+		$targetFileCount = count($this->targets);
+		$this->fire('updating', [$targetFileCount]);
+
 		foreach ($this->targets as $target)
 		{
 			$target->write();
 		}
+
+		$this->fire('updated', [$targetFileCount]);
+	}
+
+	/**
+	 * fires an event
+	 *
+	 * @param string $event
+	 * @param array|string $payload
+	 */
+	private function fire($event, $payload)
+	{
+		if ($this->events === null)
+			return;
+
+		$this->events->fire('phasset.' . $event, $payload);
 	}
 }

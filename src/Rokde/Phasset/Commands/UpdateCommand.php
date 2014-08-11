@@ -43,8 +43,31 @@ class UpdateCommand extends BaseCommand {
 		$sourceFilesRepository = new SourceFilesRepository($filterRepository, getcwd());
 		$sourceFilesRepository->setSources($config['sources']);
 
-		$targetFilesRepository = new TargetFilesRepository($sourceFilesRepository, getcwd());
+		/** @var \Illuminate\Events\Dispatcher $events */
+		$events = \App::make('events');
+		$targetFilesRepository = new TargetFilesRepository($sourceFilesRepository, getcwd(), $events);
 		$targetFilesRepository->setTargets($config['targets']);
+
+		$events->listen('phasset.updating', function ($targetFileCount) {
+			$this->info('updating ' . $targetFileCount . ' asset files...');
+		});
+		$events->listen('phasset.updated', function ($targetFileCount) {
+			$this->info($targetFileCount . ' asset files updated');
+		});
+
+		$self = $this;
+		/** @var \Symfony\Component\Console\Helper\ProgressHelper $progress */
+		$progress = $this->getHelper('progress');
+
+		$events->listen('phasset.reading', function ($sourceFileCount) use ($self, $progress) {
+			$progress->start($self->output, $sourceFileCount);
+		});
+		$events->listen('phasset.read-step', function ($step, $sourceFileCount) use ($progress) {
+			$progress->advance();
+		});
+		$events->listen('phasset.read', function ($sourceFileCount) use ($self, $progress) {
+			$progress->finish();
+		});
 
 		$targetFilesRepository->update();
 	}

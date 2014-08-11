@@ -68,7 +68,7 @@ class FilesWatchingRepository {
 	 * adds a base path to watch on
 	 *
 	 * @param string $path
-	 * @throws \Rokde\Phasset\DirectoryNotExistsException
+	 * @throws \Rokde\Phasset\Repositories\DirectoryNotExistsException
 	 * @return $this
 	 */
 	public function addPath($path)
