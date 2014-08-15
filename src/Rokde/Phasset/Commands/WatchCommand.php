@@ -12,14 +12,11 @@ namespace Rokde\Phasset\Commands;
 use App;
 use Event;
 use Illuminate\Support\Collection;
-use Rokde\Phasset\Assets\SourceFile;
-use Rokde\Phasset\Assets\TargetFile;
 use Rokde\Phasset\Repositories\FilesWatchingRepository;
 use Rokde\Phasset\Repositories\FilterRepository;
 use Rokde\Phasset\Repositories\SourceFilesRepository;
 use Rokde\Phasset\Repositories\TargetFilesRepository;
 use Rokde\Phasset\Watching\Watcher;
-use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -46,6 +43,13 @@ class WatchCommand extends BaseCommand {
 	{
 		$config = $this->laravel['config']->get('phasset::watcher');
 		$interval = $this->getIntervalInMicroseconds();
+		
+		/** @var \Illuminate\Events\Dispatcher $events */
+		$events = App::make('events');
+		
+		// setting up event listener
+		$targetFileWrittenNotifier = new TargetFileWrittenNotifier($this, $events, OutputInterface::VERBOSITY_VERBOSE);
+		
 
 		/** @var FilterRepository $filterRepository */
 		$filterRepository = $this->laravel->make('Rokde\Phasset\Repositories\FilterRepository');
@@ -61,7 +65,7 @@ class WatchCommand extends BaseCommand {
 		);
 
 		/** @var Watcher $watcher */
-		$watcher = $this->laravel->make(Watcher::class);
+		$watcher = $this->laravel->make('Rokde\Phasset\Watching\Watcher');
 
 		foreach ($config['watchFolder'] as $path => $filter)
 		{
@@ -95,7 +99,7 @@ class WatchCommand extends BaseCommand {
 			$this->info($prefix . $file);
 		});
 
-		$targetFilesRepository = new TargetFilesRepository($sourceFilesRepository, getcwd());
+		$targetFilesRepository = new TargetFilesRepository($sourceFilesRepository, getcwd(), $events);
 		$targetFilesRepository->setTargets($config['targets']);
 
 		$watcher->on(FilesWatchingRepository::EVENT_PREFIX_TYPES.'.*', function ($file, $event) use ($targetFilesRepository) {
