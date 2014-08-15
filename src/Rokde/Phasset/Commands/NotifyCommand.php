@@ -44,7 +44,7 @@ class NotifyCommand extends BaseCommand {
 
 
 		/** @var Watcher $watcher */
-		$watcher = $this->laravel->make(Watcher::class);
+		$watcher = $this->laravel->make('Rokde\Phasset\Watching\Watcher');
 
 		$self = $this;
 		$this->registerShutdownHandler(function () use ($watcher, $self) {
