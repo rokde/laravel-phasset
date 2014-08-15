@@ -118,14 +118,17 @@ class TargetFilesRepository {
 	public function update()
 	{
 		$targetFileCount = count($this->targets);
-		$this->fire('updating', [$targetFileCount]);
+		$this->fire('target.updating', [$targetFileCount]);
 
+		$step = 0;
 		foreach ($this->targets as $target)
 		{
 			$target->write();
+
+			$this->fire('target.written', [$target->getFilename(), ++$step, $targetFileCount]);
 		}
 
-		$this->fire('updated', [$targetFileCount]);
+		$this->fire('target.updated', [$targetFileCount]);
 	}
 
 	/**

@@ -49,11 +49,19 @@ class TargetFile extends File implements Writable {
 	 */
 	public function write()
 	{
+		$countSourceFiles = count($this->sourceFiles);
+		$this->fire('source.processing', $countSourceFiles);
+
 		$content = [];
+		$step = 0;
 		foreach ($this->sourceFiles as $sourceFile)
 		{
+			$this->fire('source.processing.file', [$sourceFile->getFilename(), ++$step, $countSourceFiles]);
+
 			$content[] = $sourceFile->read();
 		}
+
+		$this->fire('source.processed', $countSourceFiles);
 
 		if (! is_dir(dirname($this->getFilename())))
 			mkdir(dirname($this->getFilename()), 0777, true);

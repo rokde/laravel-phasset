@@ -9,9 +9,13 @@
 namespace Rokde\Phasset\Commands;
 
 
+use Rokde\Phasset\Observers\BasicStatusNotifier;
+use Rokde\Phasset\Observers\SourceFileProcessingNotifier;
+use Rokde\Phasset\Observers\TargetFileWrittenNotifier;
 use Rokde\Phasset\Repositories\FilterRepository;
 use Rokde\Phasset\Repositories\SourceFilesRepository;
 use Rokde\Phasset\Repositories\TargetFilesRepository;
+use Symfony\Component\Console\Output\OutputInterface;
 
 class UpdateCommand extends BaseCommand {
 
@@ -45,29 +49,13 @@ class UpdateCommand extends BaseCommand {
 
 		/** @var \Illuminate\Events\Dispatcher $events */
 		$events = \App::make('events');
+
+		$basicNotifier = new BasicStatusNotifier($this, $events, [OutputInterface::VERBOSITY_NORMAL, OutputInterface::VERBOSITY_VERBOSE, OutputInterface::VERBOSITY_VERY_VERBOSE]);
+		$targetFileWrittenNotifier = new TargetFileWrittenNotifier($this, $events, OutputInterface::VERBOSITY_VERBOSE);
+		$sourceFileProcessingNotifier = new SourceFileProcessingNotifier($this, $events, OutputInterface::VERBOSITY_VERY_VERBOSE);
+
 		$targetFilesRepository = new TargetFilesRepository($sourceFilesRepository, getcwd(), $events);
 		$targetFilesRepository->setTargets($config['targets']);
-
-		$events->listen('phasset.updating', function ($targetFileCount) {
-			$this->info('updating ' . $targetFileCount . ' asset files...');
-		});
-		$events->listen('phasset.updated', function ($targetFileCount) {
-			$this->info($targetFileCount . ' asset files updated');
-		});
-
-		$self = $this;
-		/** @var \Symfony\Component\Console\Helper\ProgressHelper $progress */
-		$progress = $this->getHelper('progress');
-
-		$events->listen('phasset.reading', function ($sourceFileCount) use ($self, $progress) {
-			$progress->start($self->output, $sourceFileCount);
-		});
-		$events->listen('phasset.read-step', function ($step, $sourceFileCount) use ($progress) {
-			$progress->advance();
-		});
-		$events->listen('phasset.read', function ($sourceFileCount) use ($self, $progress) {
-			$progress->finish();
-		});
 
 		$targetFilesRepository->update();
 	}
