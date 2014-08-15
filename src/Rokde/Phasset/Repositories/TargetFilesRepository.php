@@ -103,11 +103,15 @@ class TargetFilesRepository {
 	 */
 	public function updateTargetsWithSourceFile($file)
 	{
+		$targetFileCount = count($this->targets);
+		
 		foreach ($this->targets as $target)
 		{
 			if ($target->hasSourceFile($file))
 			{
 				$target->write();
+				
+				$this->fire('target.written', [$target->getFilename(), 1, $targetFileCount]);
 			}
 		}
 	}
