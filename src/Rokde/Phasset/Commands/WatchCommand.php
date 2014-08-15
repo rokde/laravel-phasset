@@ -12,6 +12,7 @@ namespace Rokde\Phasset\Commands;
 use App;
 use Event;
 use Illuminate\Support\Collection;
+use Rokde\Phasset\Observers\TargetFileWrittenNotifier;
 use Rokde\Phasset\Repositories\FilesWatchingRepository;
 use Rokde\Phasset\Repositories\FilterRepository;
 use Rokde\Phasset\Repositories\SourceFilesRepository;
