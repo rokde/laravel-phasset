@@ -1,5 +1,5 @@
 {
-	"name": "rokde/phasset",
+	"name": "rokde/laravel-phasset",
 	"description": "A php asset manager for laravel",
 	"keywords": ["php", "asset", "manager", "watcher", "less", "css", "sass", "scss", "compile", "laravel"],
 	"license": "MIT",
